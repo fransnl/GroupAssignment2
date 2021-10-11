@@ -32,7 +32,6 @@ namespace GroupAssignment2
             int count = 0;
             for (int i = 0; i < cards.Length; i++)
             {
-
                 if (cards[i] != null)
                 {
                     count++;
@@ -54,10 +53,6 @@ namespace GroupAssignment2
                 if (cards[i] != null)
                 {
                     sRet += cards[i].ToString() + "\n";
-                }
-                else
-                {
-                    sRet += "NO CARD \n";
                 }
                 
             }
@@ -103,6 +98,7 @@ namespace GroupAssignment2
             {
                 for (int j = 0; j < 4; j++)
                 {
+                    //adds every card combination to deck of cards, PlayingCard cards[]
                     cards[cardNr] = new PlayingCard((PlayingCardColor)j,(PlayingCardValue)i);
                     cardNr++;
                 }
@@ -128,6 +124,7 @@ namespace GroupAssignment2
                     notTopCard = true;
                 }
             }
+            
             PlayingCard card = cards[noNullCards];
             cards[noNullCards] = null;
 

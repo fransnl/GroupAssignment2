@@ -22,11 +22,23 @@ namespace GroupAssignment2
         {
             for (int i = 0; i < p1Stack.ToString().Length; i++)
             {
-                Screen.screen[2*120+i] = p1Stack.ToString()[i].ToString();
+                Screen.screen[2 * 120+i] = p1Stack.ToString()[i].ToString();
             }
             for (int i = 0; i < p2Stack.ToString().Length; i++)
             {
                 Screen.screen[3 * 120 + i] = p2Stack.ToString()[i].ToString();
+            }
+        }
+
+        public static void DrawPoints(int p1, int p2)
+        {
+            for (int i = 0; i < p1.ToString().Length; i++)
+            {
+                Screen.screen[5 * 120 + i] = p1.ToString()[i].ToString();
+            }
+            for (int i = 0; i < p2.ToString().Length; i++)
+            {
+                Screen.screen[6 * 120 + i] = p2.ToString()[i].ToString();
             }
         }
 
@@ -61,9 +73,12 @@ namespace GroupAssignment2
                 switch (cNr)
                 {
                     case 1:
-                        p1Stack -= 200;
-                        p2Stack -= 200;
-                        pot += 400;
+                        if (p1Stack > 0 && p2Stack > 0)
+                        {
+                            p1Stack -= 500;
+                            p2Stack -= 500;
+                            pot += 1000;
+                        }
                         isItShowing[0] = true;
                         isItShowing[1] = true;
                         isItShowing[2] = true;
@@ -73,6 +88,7 @@ namespace GroupAssignment2
                         break;
                     case 3:
                         isItShowing[4] = true;
+                        WhoWins(p1, p2);
                         break;
                     case 4:
                         cNr = 0;
@@ -80,7 +96,6 @@ namespace GroupAssignment2
                         {
                             isItShowing[i] = false;
                             deckOfCards = new DeckOfCards();
-                            WhoWins(p1, p2);
                             deckOfCards.Shuffle();
                             Deal();
                         }
@@ -109,7 +124,7 @@ namespace GroupAssignment2
             }
         }
         
-        public static void drawCards()
+        public static void DrawCards()
         {
             Screen.DrawPos(2, 54, p1[0]);
             Screen.DrawPos(2, 59, p1[1]);
@@ -131,7 +146,15 @@ namespace GroupAssignment2
             int diamond = 0;
             int aPos = 0;
             int points = 0;
+            bool Pair = false;
+            bool twoPair = false;
+            bool threePair = false;
+            bool straight = false;
             bool flush = false;
+            bool fullHouse = false;
+            bool fourPair = false;
+            bool straightFlush = false;
+            bool rStraightFlush = false;
 
             for (int i = 0; i < 5; i++)
             {
@@ -145,6 +168,96 @@ namespace GroupAssignment2
                 aPos++;
             }
 
+            for (int i = 0; i < 7; i++)
+            {
+                for (int j = 0; j < 7; j++)
+                {
+                    if ((int)hand[i].Value < (int)hand[j].Value)
+                    {
+                        PlayingCard switchCards = hand[j];
+                        hand[j] = hand[i];
+                        hand[i] = switchCards;
+                    }
+                }
+            }
+
+            bool pairValue = false;
+
+
+
+            //TwoPair, Pair
+
+            PlayingCard[] pair = new PlayingCard[2];
+            for (int i = 1; i < 7; i++)
+            {
+                if ((int)hand[i - 1].Value == (int)hand[i].Value && pairValue == true)
+                {
+                    twoPair = true;
+                }
+                if ((int)hand[i - 1].Value == (int)hand[i].Value)
+                {
+                    Pair = true;
+                    pair[0] = hand[i - 1];
+                    pair[1] = hand[i];
+                    pairValue = true;
+                }
+            }
+
+            //ThreePair
+            for (int i = 2; i < 7; i++)
+            {
+                if ((int)hand[i - 1].Value == (int)hand[i].Value && (int)hand[i - 2].Value == (int)hand[i].Value)
+                {
+                    threePair = true;
+                }
+            }
+            //FourPair
+            for (int i = 3; i < 7; i++)
+            {
+                if ((int)hand[i - 1].Value == (int)hand[i].Value && (int)hand[i - 2].Value == (int)hand[i].Value && (int)hand[i - 3].Value == (int)hand[i].Value)
+                {
+                    fourPair = true;
+                }
+            }
+
+            //check straight, straightFlush
+            for (int i = 0; i < 2; i++)
+            {
+                if ((int)hand[i].Value == (int)hand[i+1].Value - 1 
+                    && (int)hand[i].Value == (int)hand[i + 2].Value - 2 
+                    && (int)hand[i].Value == (int)hand[i + 3].Value - 3 
+                    && (int)hand[i].Value == (int)hand[i + 4].Value - 4)
+                {
+                    straight = true;
+                    
+                    if ((int)hand[i].Color == (int)hand[i + 1].Color - 1
+                    && (int)hand[i].Value == (int)hand[i + 2].Color - 2
+                    && (int)hand[i].Value == (int)hand[i + 3].Color - 3
+                    && (int)hand[i].Value == (int)hand[i + 4].Color - 4)
+                    {
+                        straightFlush = true;
+                    }
+                }
+            }
+            if ((int)hand[0].Value == 2 
+                && (int)hand[1].Value == 3
+                && (int)hand[2].Value == 4
+                && (int)hand[3].Value == 5
+                && (int)hand[6].Value == 14)
+            {
+                straight = true;
+
+                if ((int)hand[1].Color == (int)hand[0].Color
+                && (int)hand[2].Color == (int)hand[0].Color
+                && (int)hand[3].Color == (int)hand[0].Color
+                && (int)hand[6].Color == (int)hand[0].Color)
+                {
+                    straightFlush = true;
+                }
+            }
+
+
+            //check flush
             for (int i = 0; i < 7; i++)
             {
                 if (hand[i].Color == PlayingCardColor.Hearts)
@@ -181,32 +294,76 @@ namespace GroupAssignment2
                         flush = true;
                     }
                 }
-
             }
 
-            //flush
+            //fullHouse
+            for (int i = 2; i < 7; i++)
+            {
+                if ((int)hand[i - 1].Value == (int)hand[i].Value && (int)hand[i - 2].Value == (int)hand[i].Value && pair[0].Value != hand[i].Value)
+                {
+                    fullHouse = true;
+                }
+            }
+
+            //straightflush
+
+            if ((int)hand[2].Value == 10 && (int)hand[3].Value == 11 && (int)hand[4].Value == 12 && (int)hand[5].Value == 13 && (int)hand[6].Value == 14)
+            {
+                if (hand[2].Color == hand[3].Color && hand[2].Color == hand[4].Color && hand[2].Color == hand[5].Color && hand[2].Color == hand[6].Color)
+                {
+                    rStraightFlush = true;
+                }
+            }
+            
+
+            if (Pair == true)
+            {
+                points += 100;
+            }
+            if (twoPair == true)
+            {
+                points = 0;
+                points += 200;
+            }
+            if (threePair == true)
+            {
+                points = 0;
+                points += 300;
+            }
+            if (straight == true)
+            {
+                points = 0;
+                points += 400;
+            }
             if (flush == true)
             {
-                points += 6;
-                for (int i = 0; i < 7; i++)
-                {
-                    if (hand[i].Color == PlayingCardColor.Hearts && heart >= 5)
-                    {
-                        points += (int)hand[i].Value;
-                    }
-                    if (hand[i].Color == PlayingCardColor.Spades && spade >= 5)
-                    {
-                        points += (int)hand[i].Value;
-                    }
-                    if (hand[i].Color == PlayingCardColor.Clubs && club >= 5)
-                    {
-                        points += (int)hand[i].Value;
-                    }
-                    if (hand[i].Color == PlayingCardColor.Diamonds && diamond >= 5)
-                    {
-                        points += (int)hand[i].Value;
-                    }
-                }
+                points = 0;
+                points += 500;
+            }
+            if (fullHouse == true)
+            {
+                points = 0;
+                points += 600;
+            }
+            if (fourPair == true)
+            {
+                points = 0;
+                points += 700;
+            }
+            if (straightFlush == true)
+            {
+                points = 0;
+                points += 800;
+            }
+            if (rStraightFlush == true)
+            {
+                points = 0;
+                points += 900;
+            }
+
+            for (int i = 0; i < 5; i++)
+            {
+                points += (int)hand[i].Value;
             }
 
             return points;
@@ -217,18 +374,20 @@ namespace GroupAssignment2
             int p1 = Rules(player1);
             int p2 = Rules(player2);
 
-            if (p2 < p1)
+            DrawPoints(p1, p2);
+
+            if (p2 < p1 && p1Stack < 4000)
             {
                 pot = 0;
-                p1Stack += 400;
+                p1Stack += 1000;
             }
-            else if (p1 < p2)
+            if (p1 < p2 && p2Stack < 4000)
             {
                 pot = 0;
-                p2Stack += 400;
+                p2Stack += 1000;
 
             }
-            else if (p1 == p2)
+            if (p1 == p2)
             {
                 p1Stack += pot/2;
                 p2Stack += pot/2;
@@ -306,6 +465,7 @@ namespace GroupAssignment2
 
         public Screen(int X, int Y)
         {
+            int hand = 0;
             Console.SetWindowSize(Y, X);
             screen = new string[40 * 120];
             Poker poker = new Poker();
@@ -313,10 +473,12 @@ namespace GroupAssignment2
             while (!notRunning)
             {
                 Console.BackgroundColor = ConsoleColor.Gray;
+                Screen.screen[0 * 120] = hand.ToString();
                 Poker.Input();
                 Poker.DrawStacks();
-                Poker.drawCards();
+                Poker.DrawCards();
                 Screen.DrawScreen();
+                hand++;
             }
         }
 

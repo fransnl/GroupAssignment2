@@ -7,9 +7,15 @@ namespace GroupAssignment2
 
         static void Main(string[] args)
         {
-            Screen screen = new Screen(40, 120);
+            /*
+             * Extra extra challange, if you want to play poker
+             * remove comment and comment out the other code
+             */
+            //Screen screen = new Screen(40, 120);
 
-            /*Console.SetBufferSize(120, 80);
+            //increasing regular buffersize to fit all text
+            Console.SetBufferSize(120, 80);
+
             //Prinout 3 random cards
             Console.WriteLine($"\n3 randomly generated cards:");
             Console.WriteLine(new PlayingCard());
@@ -41,8 +47,8 @@ namespace GroupAssignment2
             Console.WriteLine(myDeck.GetTopCard());
 
             Console.WriteLine($"\nDeck has now {myDeck.Count()} cards:");
-            Console.WriteLine(myDeck);*/
-            
+            Console.WriteLine(myDeck);
+
         }
     }
 }

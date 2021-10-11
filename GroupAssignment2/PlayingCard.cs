@@ -28,11 +28,9 @@ namespace GroupAssignment2
 			Value = (PlayingCardValue)rand.Next(2, 15);
 
 		}
+		// constructor to add specific cards to deck of cards
 		public PlayingCard(PlayingCardColor color, PlayingCardValue value)
 		{
-			//YOUR CODE
-			// write a constructor that generates a random card.
-			// I.e., PlayingCard card1 = new PlayingCard(); generates a random card.
 			Color = color;
 			Value = value;
 		}
@@ -62,24 +60,6 @@ namespace GroupAssignment2
 
                 switch (Value)
                 {
-                    case PlayingCardValue.Two:
-						return "Value";
-                    case PlayingCardValue.Three:
-						return "Value";
-                    case PlayingCardValue.Four:
-						return "Value";
-                    case PlayingCardValue.Five:
-						return "Value";
-                    case PlayingCardValue.Six:
-						return "Value";
-                    case PlayingCardValue.Seven:
-						return "Value";
-                    case PlayingCardValue.Eight:
-						return "Value";
-                    case PlayingCardValue.Nine:
-						return "Value";
-                    case PlayingCardValue.Ten:
-						return "Value";
                     case PlayingCardValue.Knight:
 						return "Face";
                     case PlayingCardValue.Queen:
@@ -89,7 +69,7 @@ namespace GroupAssignment2
                     case PlayingCardValue.Ace:
 						return "Face";
 					default:
-						return null;
+						return "value";
                 }
             }
 		}
